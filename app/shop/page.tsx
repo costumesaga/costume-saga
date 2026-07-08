@@ -1,3 +1,4 @@
+import CategoryFilter from "../../components/CategoryFilter";
 import SearchBar from "../../components/SearchBar";
 import ProductGrid from "../../components/ProductGrid";
 export default function ShopPage() {
@@ -14,7 +15,7 @@ export default function ShopPage() {
         </p>
 
         <SearchBar />
-        
+        <CategoryFilter />
         <ProductGrid />
 
       </div>
