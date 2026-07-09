@@ -1,6 +1,7 @@
 import { products } from "@/data/products";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import AddToCartButton from "@/components/AddToCartButton";
 
 interface Props {
   params: Promise<{
@@ -59,9 +60,12 @@ if (!product) {
           </div>
         </div>
 
-        <button className="mt-10 bg-[var(--color-primary)] text-white px-8 py-4 rounded-full hover:bg-[var(--color-primary-dark)] transition">
-          Add to Cart
-        </button>
+        <AddToCartButton
+  id={product.id}
+  name={product.name}
+  price={product.price}
+  image={product.image}
+/>
 
       </div>
 

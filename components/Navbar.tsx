@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import CartIcon from "./CartIcon";
 
 export default function Navbar() {
   return (
@@ -44,9 +45,20 @@ export default function Navbar() {
 </Link>
         </nav>
 
-        <button className="rounded-full bg-[#0F5C4D] px-6 py-3 text-white font-semibold shadow-lg hover:bg-[#0B4B3E] transition-all duration-300 hover:scale-105">
-          WhatsApp
-        </button>
+        <div className="flex items-center gap-4">
+
+  <CartIcon />
+
+  <a
+    href="https://wa.me/918939491119"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="rounded-full bg-[var(--color-primary)] px-5 py-2 text-white hover:bg-[var(--color-primary-dark)] transition"
+  >
+    WhatsApp
+  </a>
+
+</div>
 
       </div>
     </header>
