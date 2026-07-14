@@ -2,6 +2,9 @@ import { products } from "@/data/products";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
+import MeasurementSelector from "@/components/MeasurementSelector";
+import MeasurementGuide from "@/components/MeasurementGuide";
+import MeasurementUpload from "@/components/MeasurementUpload";
 
 interface Props {
   params: Promise<{
@@ -12,65 +15,57 @@ interface Props {
 export default async function ProductDetails({ params }: Props) {
   const { id } = await params;
 
-  const product = products.find((p) => p.id === Number(id));
+  const product = products.find(
+    (p) => p.id === Number(id)
+  );
 
-if (!product) {
-  notFound();
-}
+  if (!product) {
+    notFound();
+  }
 
- return (
-  <div className="max-w-7xl mx-auto px-6 py-20">
+  return (
+    <div className="max-w-7xl mx-auto px-6 py-20">
 
-    <div className="grid lg:grid-cols-2 gap-12">
+      <div className="grid lg:grid-cols-2 gap-12">
 
-      <Image
-        src={product.image}
-        alt={product.name}
-        width={600}
-        height={700}
-        className="rounded-3xl shadow-xl"
-      />
+        <Image
+          src={product.image}
+          alt={product.name}
+          width={600}
+          height={700}
+          className="rounded-3xl shadow-xl"
+        />
 
-      <div>
+        <div>
 
-        <h1 className="text-5xl font-bold text-[var(--color-text)]">
-          {product.name}
-        </h1>
+          <h1 className="text-5xl font-bold text-[var(--color-text)]">
+            {product.name}
+          </h1>
 
-        <p className="text-3xl font-bold text-[var(--color-primary)] mt-6">
-          ₹{product.price}
-        </p>
+          <p className="text-3xl font-bold text-[var(--color-primary)] mt-6">
+            ₹{product.price}
+          </p>
 
-        <p className="mt-6 text-gray-600 leading-8">
-          {product.description}
-        </p>
+          <p className="mt-6 text-gray-600 leading-8">
+            {product.description}
+          </p>
 
-        <div className="mt-8">
-          <h3 className="font-semibold mb-3">Available Sizes</h3>
+          <MeasurementSelector />
+          <MeasurementGuide />
+          <MeasurementUpload />
 
-          <div className="flex flex-wrap gap-3">
-            {product.sizes.map((size) => (
-              <span
-                key={size}
-                className="border rounded-full px-4 py-2"
-              >
-                {size}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <AddToCartButton
+<AddToCartButton
   id={product.id}
   name={product.name}
   price={product.price}
   image={product.image}
 />
 
+
+        </div>
+
       </div>
 
     </div>
-
-  </div>
-);
+  );
 }

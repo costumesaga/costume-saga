@@ -1,15 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-store";
+import { supabase } from "@/lib/supabase";
 
 export default function CheckoutPage() {
+  const router = useRouter();
+
   const cart = useCart((state) => state.cart);
+const clearCart = useCart((state) => state.clearCart);
 
   const total = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
+
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -21,26 +28,55 @@ export default function CheckoutPage() {
     pincode: "",
   });
 
-  const handleContinue = () => {
-    if (
-      !form.fullName ||
-      !form.phone ||
-      !form.address ||
-      !form.city ||
-      !form.state ||
-      !form.pincode
-    ) {
-      alert("Please fill all required fields.");
-      return;
-    }
+  const handleContinue = async () => {
+  if (
+    !form.fullName ||
+    !form.phone ||
+    !form.address ||
+    !form.city ||
+    !form.state ||
+    !form.pincode
+  ) {
+    alert("Please fill all required fields.");
+    return;
+  }
 
-    if (form.phone.length !== 10) {
-      alert("Enter a valid 10-digit mobile number.");
-      return;
-    }
+  if (form.phone.length !== 10) {
+    alert("Enter a valid 10-digit mobile number.");
+    return;
+  }
 
-    alert("Checkout validated successfully! Payment integration coming next.");
-  };
+  setLoading(true);
+
+  const { error } = await supabase.from("orders").insert([
+    {
+      full_name: form.fullName,
+      phone: form.phone,
+      email: form.email,
+      address: form.address,
+      city: form.city,
+      state: form.state,
+      pincode: form.pincode,
+      total: total,
+      products: cart,
+    },
+  ]);
+
+  console.log("Supabase Error:", error);
+
+  if (error) {
+    console.error(error);
+    alert("Failed to place order.");
+    setLoading(false);
+    return;
+  }
+
+  clearCart();
+
+  router.push("/order-success");
+};
+
+
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
@@ -196,9 +232,10 @@ export default function CheckoutPage() {
 
           <button
             onClick={handleContinue}
-            className="w-full mt-8 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white py-4 rounded-full transition"
+            disabled={loading}
+            className="w-full mt-8 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white py-4 rounded-full transition disabled:opacity-50"
           >
-            Continue to Payment
+            {loading ? "Processing..." : "Continue to Payment"}
           </button>
 
         </div>
